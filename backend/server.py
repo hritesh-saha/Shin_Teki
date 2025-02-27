@@ -13,12 +13,11 @@ app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Load model and labels safely
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "converted_keras/keras_model.h5")
-LABELS_PATH = os.path.join(BASE_DIR, "converted_keras/labels.txt")
+MODEL_PATH = "keras_model.h5"
+LABELS_PATH = "labels.txt"
 
-# OpenAI API Key (Replace with your own key)
-openai.api_key = "your_openai_api_key_here"
+# OpenAI API Key (use environment variable for security)
+openai.api_key = os.getenv("OPENAI_API_KEY", "your_default_key_here")
 
 try:
     detector = HandDetector(maxHands=1)
@@ -115,4 +114,4 @@ def process_image(data):
 
 if __name__ == "__main__":
     print("Server running on http://0.0.0.0:5000")
-    socketio.run(app, host="0.0.0.0", port=5000, allow_unsafe_werkzeug=True)
+    socketio.run(app, host="0.0.0.0", port=5000)
