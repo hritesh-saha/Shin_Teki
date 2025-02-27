@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask
 from flask_socketio import SocketIO
 import cv2
 import numpy as np
@@ -7,6 +7,7 @@ from cvzone.ClassificationModule import Classifier
 import base64
 import math
 import os
+import openai 
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -16,6 +17,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "converted_keras/keras_model.h5")
 LABELS_PATH = os.path.join(BASE_DIR, "converted_keras/labels.txt")
 
+# OpenAI API Key (Replace with your own key)
+openai.api_key = "your_openai_api_key_here"
+
 try:
     detector = HandDetector(maxHands=1)
     classifier = Classifier(MODEL_PATH, LABELS_PATH)
@@ -23,6 +27,24 @@ try:
     sentence = []
 except Exception as e:
     print(f"Error initializing models: {e}")
+
+def refine_sentence(sentence_list):
+    """Use OpenAI to refine the sentence structure if at least 3 words are detected"""
+    if len(sentence_list) < 3:
+        return " ".join(sentence_list)  # Return raw words if fewer than 3
+    
+    prompt = f"Make this sequence of words into a proper, coherent sentence: {' '.join(sentence_list)}"
+    
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": "You are an AI that corrects and structures sign language sentences."},
+                      {"role": "user", "content": prompt}]
+        )
+        return response["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        print(f"OpenAI Error: {e}")
+        return " ".join(sentence_list)  # Fallback to raw sentence
 
 @socketio.on("image")
 def process_image(data):
@@ -80,11 +102,13 @@ def process_image(data):
         # Store sentence history
         if len(sentence) == 0 or word != sentence[-1]:
             sentence.append(word)
-        if len(sentence) > 10:
-            sentence.pop(0)
 
-        formatted_sentence = " ".join(sentence)
-        socketio.emit("sentence", formatted_sentence)
+        # Refine sentence only if at least 3 words are detected
+        refined_sentence = refine_sentence(sentence)
+        print(f"Refined sentence: {refined_sentence}")
+
+        # Emit refined sentence
+        socketio.emit("sentence", refined_sentence)
 
     except Exception as e:
         print(f"Error processing image: {e}")
