@@ -1,0 +1,7 @@
+Flask
+flask-socketio
+numpy
+opencv-python
+cvzone
+tensorflow
+mediapipe
