@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import WebcamStream from './components/WebcamStream'
+import Landing from './components/Landing'
 
 function App() {
 
@@ -11,7 +12,8 @@ function App() {
     <>
     <BrowserRouter>
    <Routes>
-    <Route path="/" element={<WebcamStream></WebcamStream>} ></Route>
+    <Route path="/" element={<Landing></Landing>} ></Route>
+    <Route path="/stream" element={<WebcamStream></WebcamStream>} ></Route>
    </Routes>
    </BrowserRouter>
    </>
