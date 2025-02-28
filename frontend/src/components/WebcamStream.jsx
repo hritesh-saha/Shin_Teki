@@ -65,10 +65,11 @@ function WebcamVideo({ isCapturing, setIsCapturing }) {
 function MessageBox({ recognizedText, isCapturing }) {
     return (
         <div className="p-4 w-full mx-auto bg-[#FF007F] rounded-lg shadow-md">
+            <div className="mx-auto bg-[#FF007F] text-white">Press q to capture and s to pause</div>
             <h2 className="text-xl text-white font-semibold mb-2">Detected Sentence</h2>
             <div className="p-3 bg-white border rounded-md min-h-[50px]">
                 <ReactTyped strings={[recognizedText || "Waiting for Input..."]} typeSpeed={70} backSpeed={50} />
-                <p>Status: {isCapturing ? "Capturing..." : "Paused"}</p>
+                <p className="bg-neutral-500 text-white rounded-full p-2">Status: {isCapturing ? "Capturing..." : "Paused"}</p>
             </div>
         </div>
     );
