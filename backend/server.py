@@ -12,38 +12,46 @@ import openai
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# Load model and labels safely
-MODEL_PATH = "keras_model.h5"
-LABELS_PATH = "labels.txt"
+## Define paths (relative to backend folder)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of server.py
+MODEL_PATH = os.path.join(BASE_DIR, "keras_model-1.h5")
+LABELS_PATH = os.path.join(BASE_DIR, "labels-2.txt")
 
-# OpenAI API Key (use environment variable for security)
-openai.api_key = os.getenv("OPENAI_API_KEY", "your_default_key_here")
+# Ensure model and labels exist
+if not os.path.exists(MODEL_PATH):
+    raise FileNotFoundError(f"Error: {MODEL_PATH} not found!")
+if not os.path.exists(LABELS_PATH):
+    raise FileNotFoundError(f"Error: {LABELS_PATH} not found!")
 
+# Initialize Hand Detector
+detector = HandDetector(maxHands=1)
+
+# Initialize Classifier
 try:
-    detector = HandDetector(maxHands=1)
     classifier = Classifier(MODEL_PATH, LABELS_PATH)
-    labels = ["Hello", "Thank you", "Yes", "No", "Please"]
-    sentence = []
+    labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "T", "U", "V", "W", "X", "Y"]
+    print("Classifier initialized successfully!")
 except Exception as e:
-    print(f"Error initializing models: {e}")
+    raise RuntimeError(f"Error initializing classifier: {e}")
 
-def refine_sentence(sentence_list):
-    """Use OpenAI to refine the sentence structure if at least 3 words are detected"""
-    if len(sentence_list) < 3:
-        return " ".join(sentence_list)  # Return raw words if fewer than 3
+# def refine_sentence(sentence_list):
+#     """Use OpenAI to refine the sentence structure if at least 3 words are detected"""
+#     if len(sentence_list) < 3:
+#         return " ".join(sentence_list)  # Return raw words if fewer than 3
     
-    prompt = f"Make this sequence of words into a proper, coherent sentence: {' '.join(sentence_list)}"
+#     prompt = f"Make this sequence of words into a proper, coherent sentence: {' '.join(sentence_list)}"
     
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "system", "content": "You are an AI that corrects and structures sign language sentences."},
-                      {"role": "user", "content": prompt}]
-        )
-        return response["choices"][0]["message"]["content"].strip()
-    except Exception as e:
-        print(f"OpenAI Error: {e}")
-        return " ".join(sentence_list)  # Fallback to raw sentence
+#     try:
+#         response = openai.ChatCompletion.create(
+#             model="gpt-3.5-turbo",
+#             messages=[{"role": "system", "content": "You are an AI that corrects and structures sign language sentences."},
+#                       {"role": "user", "content": prompt}]
+#         )
+#         return response["choices"][0]["message"]["content"].strip()
+#     except Exception as e:
+#         print(f"OpenAI Error: {e}")
+#         return " ".join(sentence_list)  # Fallback to raw sentence
+sentence = []
 
 @socketio.on("image")
 def process_image(data):
@@ -103,11 +111,11 @@ def process_image(data):
             sentence.append(word)
 
         # Refine sentence only if at least 3 words are detected
-        refined_sentence = refine_sentence(sentence)
-        print(f"Refined sentence: {refined_sentence}")
+        #refined_sentence = refine_sentence(sentence)
+        print(f"Refined sentence: {sentence}")
 
         # Emit refined sentence
-        socketio.emit("sentence", refined_sentence)
+        socketio.emit("sentence", sentence)
 
     except Exception as e:
         print(f"Error processing image: {e}")
