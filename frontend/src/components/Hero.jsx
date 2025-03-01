@@ -6,14 +6,14 @@ export default function Hero() {
     <div className="flex justify-center items-center text-white">
       <div className="max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center p-10">
         <div className="flex justify-center items-center md:text-7xl sm:text-6xl text-4xl font-bold text-[#FF007F] md:py-4">
-          <div className="mx-4">Shin Teki</div>
-          <div>
+          <motion.div whileInView={{opacity:1,x:0}} initial={{opacity:0,x:-200}} transition={{duration:1}} className='mx-2'>Shin</motion.div> <motion.div whileInView={{opacity:1,x:0}} initial={{opacity:0,x:200}} transition={{duration:1}} className='mx-2' >Teki</motion.div>
+          <motion.div initial={{ opacity: 0, y: 0 }} animate={{ opacity: 1, y: 0 }}  transition={{ duration: 3,delay:1 }}>
             <img
-              className="h-[40px] w-[40px]"
+              className="h-[50px] w-[45px] mt-3"
               src="/ShinTeki.jpeg"
               alt="Shin Teki"
             />
-          </div>
+          </motion.div>
         </div>
 
         <div className="flex flex-col justify-center items-center">
