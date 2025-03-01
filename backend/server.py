@@ -34,28 +34,28 @@ try:
 except Exception as e:
     raise RuntimeError(f"Error initializing classifier: {e}")
 
-import google.generativeai as genai
+#import google.generativeai as genai
 
-def refine_sentence(sentence_list):
-    """Use Google Gemini (PaLM API) to refine the sentence structure if at least 3 words are detected"""
-    if len(sentence_list) < 3:
-        return " ".join(sentence_list)  # Return raw words if fewer than 3
+# def refine_sentence(sentence_list):
+#     """Use Google Gemini (PaLM API) to refine the sentence structure if at least 3 words are detected"""
+#     if len(sentence_list) < 3:
+#         return " ".join(sentence_list)  # Return raw words if fewer than 3
     
-    prompt = f"Make this sequence of letter into a proper, concise sentence: {' '.join(sentence_list)}"
+#     prompt = f"Make this sequence of letter into a proper, concise sentence: {' '.join(sentence_list)}"
     
-    try:
-        genai.configure(api_key="AIzaSyBvnCW4uzgY-rSklnV0QJny7OJ9ht_pR8U")  # Replace with your actual API key
-        model = genai.GenerativeModel("gemini-2.0-flash")
+#     try:
+#         genai.configure(api_key="YOUR-API-KEY")  # Replace with your actual API key
+#         model = genai.GenerativeModel("gemini-2.0-flash")
         
-        response = model.generate_content(prompt)
+#         response = model.generate_content(prompt)
         
-        return response.text.strip()
-    except Exception as e:
-        print(f"Gemini API Error: {e}")
-        return " ".join(sentence_list)  # Fallback to raw sentence
+#         return response.text.strip()
+#     except Exception as e:
+#         print(f"Gemini API Error: {e}")
+#         return " ".join(sentence_list)  # Fallback to raw sentence
 
 sentence = []
-refined_sentence=[]
+#refined_sentence=[]
 
 @socketio.on("image")
 def process_image(data):
@@ -120,8 +120,8 @@ def process_image(data):
             sentence.append(word)
 
         # Refine sentence only if at least 3 words are detected
-        refined_sentence = refine_sentence(sentence)
-        print(f"Refined sentence: {refined_sentence}")
+        #refined_sentence = refine_sentence(sentence)
+        print(f"Refined sentence: {sentence}")
 
         # Emit refined sentence
         socketio.emit("sentence", sentence)
