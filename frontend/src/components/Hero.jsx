@@ -17,7 +17,7 @@ export default function Hero() {
         </div>
 
         <div className="flex flex-col justify-center items-center">
-          <motion.p initial={{ opacity: 0, y: 200 }} animate={{ opacity: 1, y: 0 }}  transition={{ duration: 2 }} className="md:text-5xl sm:text-4xl text-xl font-bold">
+          <motion.p initial={{ opacity: 0, y: 200 }} animate={{ opacity: 1, y: 0 }}  transition={{ duration: 2 }} className="md:text-5xl sm:text-4xl text-xl font-bold mt-3">
             Communication is more than words
           </motion.p>
 
@@ -25,7 +25,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: -200 }} animate={{ opacity: 1, y: 0 }}  transition={{ duration: 2 }}
             className="leading-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-[#FF007F] 
-                md:text-5xl sm:text-4xl text-xl font-bold mt-2 min-h-[80px] w-full max-w-[700px] whitespace-nowrap"
+                md:text-5xl sm:text-4xl text-xl font-bold mt-6 min-h-[80px] w-full max-w-[700px] whitespace-nowrap"
           >
             <ReactTyped
               strings={["Sign Language Detection", "Real Time"]}
@@ -36,7 +36,7 @@ export default function Hero() {
           </motion.div>
 
           {/* Button stays in place now */}
-          <div className="mt-4">
+          <div className="mt-6">
             <Link to={"/stream"}>
               <motion.button
               initial={{ opacity: 0, y: 0 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 3,delay:1 }}
