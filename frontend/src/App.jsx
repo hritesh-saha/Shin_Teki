@@ -5,6 +5,7 @@ import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import WebcamStream from './components/WebcamStream'
 import Landing from './components/Landing'
+import ShinC from './components/Shin'
 
 function App() {
 
@@ -14,6 +15,8 @@ function App() {
    <Routes>
     <Route path="/" element={<Landing></Landing>} ></Route>
     <Route path="/stream" element={<WebcamStream></WebcamStream>} ></Route>
+    <Route path="/chain" element={<ShinC></ShinC>} ></Route>
+
    </Routes>
    </BrowserRouter>
    </>
