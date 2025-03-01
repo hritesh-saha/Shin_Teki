@@ -7,7 +7,7 @@ from cvzone.ClassificationModule import Classifier
 import base64
 import math
 import os
-import openai 
+#import openai 
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -29,29 +29,33 @@ detector = HandDetector(maxHands=1)
 # Initialize Classifier
 try:
     classifier = Classifier(MODEL_PATH, LABELS_PATH)
-    labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "T", "U", "V", "W", "X", "Y"]
+    labels = ["A", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "T", "U", "V", "W", "X", "Y"]
     print("Classifier initialized successfully!")
 except Exception as e:
     raise RuntimeError(f"Error initializing classifier: {e}")
 
-# def refine_sentence(sentence_list):
-#     """Use OpenAI to refine the sentence structure if at least 3 words are detected"""
-#     if len(sentence_list) < 3:
-#         return " ".join(sentence_list)  # Return raw words if fewer than 3
+import google.generativeai as genai
+
+def refine_sentence(sentence_list):
+    """Use Google Gemini (PaLM API) to refine the sentence structure if at least 3 words are detected"""
+    if len(sentence_list) < 3:
+        return " ".join(sentence_list)  # Return raw words if fewer than 3
     
-#     prompt = f"Make this sequence of words into a proper, coherent sentence: {' '.join(sentence_list)}"
+    prompt = f"Make this sequence of letter into a proper, concise sentence: {' '.join(sentence_list)}"
     
-#     try:
-#         response = openai.ChatCompletion.create(
-#             model="gpt-3.5-turbo",
-#             messages=[{"role": "system", "content": "You are an AI that corrects and structures sign language sentences."},
-#                       {"role": "user", "content": prompt}]
-#         )
-#         return response["choices"][0]["message"]["content"].strip()
-#     except Exception as e:
-#         print(f"OpenAI Error: {e}")
-#         return " ".join(sentence_list)  # Fallback to raw sentence
+    try:
+        genai.configure(api_key="AIzaSyBvnCW4uzgY-rSklnV0QJny7OJ9ht_pR8U")  # Replace with your actual API key
+        model = genai.GenerativeModel("gemini-2.0-flash")
+        
+        response = model.generate_content(prompt)
+        
+        return response.text.strip()
+    except Exception as e:
+        print(f"Gemini API Error: {e}")
+        return " ".join(sentence_list)  # Fallback to raw sentence
+
 sentence = []
+refined_sentence=[]
 
 @socketio.on("image")
 def process_image(data):
@@ -72,9 +76,14 @@ def process_image(data):
             print("No hand detected.")
             return
 
-        # Crop the image
+        # Extract hand landmarks
         hand = hands[0]
         x, y, w, h = hand["bbox"]
+        hand_coordinates = hand["lmList"]  # List of hand landmark coordinates
+        
+        # Emit hand coordinates
+        socketio.emit("hand_coordinates", hand_coordinates)
+        
         h_img, w_img, _ = img.shape
         x, y, w, h = max(0, x), max(0, y), min(w, w_img - x), min(h, h_img - y)
         imgCrop = img[y:y+h, x:x+w]
@@ -111,8 +120,8 @@ def process_image(data):
             sentence.append(word)
 
         # Refine sentence only if at least 3 words are detected
-        #refined_sentence = refine_sentence(sentence)
-        print(f"Refined sentence: {sentence}")
+        refined_sentence = refine_sentence(sentence)
+        print(f"Refined sentence: {refined_sentence}")
 
         # Emit refined sentence
         socketio.emit("sentence", sentence)
