@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.9",
+    "@tensorflow-models/handpose": "^0.1.0",
+    "@tensorflow/tfjs": "^4.22.0",
     "framer-motion": "^12.4.7",
     "opencv.js": "^1.2.1",
     "react": "^19.0.0",

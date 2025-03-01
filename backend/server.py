@@ -14,8 +14,8 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 ## Define paths (relative to backend folder)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of server.py
-MODEL_PATH = os.path.join(BASE_DIR, "keras_model-1.h5")
-LABELS_PATH = os.path.join(BASE_DIR, "labels-2.txt")
+MODEL_PATH = os.path.join(BASE_DIR, "keras_model(New).h5")
+LABELS_PATH = os.path.join(BASE_DIR, "labels-3.txt")
 
 # Ensure model and labels exist
 if not os.path.exists(MODEL_PATH):
@@ -29,7 +29,7 @@ detector = HandDetector(maxHands=1)
 # Initialize Classifier
 try:
     classifier = Classifier(MODEL_PATH, LABELS_PATH)
-    labels = ["A", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "T", "U", "V", "W", "X", "Y"]
+    labels = ["A", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "T", "U", "V", "W", "X", "Y","Space","Delete"]
     print("Classifier initialized successfully!")
 except Exception as e:
     raise RuntimeError(f"Error initializing classifier: {e}")
@@ -116,7 +116,11 @@ def process_image(data):
         print(f"Predicted word: {word}")
 
         # Store sentence history
-        if len(sentence) == 0 or word != sentence[-1]:
+        if word == "Space":
+            sentence.append(" ")
+        elif word == "Delete" and sentence:
+            sentence.pop()
+        elif len(sentence) == 0 or word != sentence[-1]:
             sentence.append(word)
 
         # Refine sentence only if at least 3 words are detected
