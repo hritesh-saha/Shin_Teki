@@ -187,13 +187,14 @@ export default function SignLanguageRecognition() {
             if (event.key === "q") {
                 setIsCapturing(false);
                 if (recognizedText) {
-                    storeStringOnBlockchain(recognizedText);
+                    const textToStore = Array.isArray(recognizedText) ? recognizedText.join("") : recognizedText;
+                    storeStringOnBlockchain(textToStore);
                 }
             } else if (event.key === "s") {
                 setIsCapturing(true);
             }
         };
-
+    
         window.addEventListener("keydown", handleKeyPress);
         return () => window.removeEventListener("keydown", handleKeyPress);
     }, [recognizedText, state.contract]);
@@ -268,7 +269,10 @@ const MessageBox = ({ recognizedText, isCapturing }) => {
             <div className="mx-auto bg-[#FF007F] text-white">Press Q to pause and S to start capturing</div>
             <h2 className="text-xl text-white font-semibold mb-2">Detected Sentence</h2>
             <div className="p-3 bg-white border rounded-md min-h-[50px]">
-                <ReactTyped strings={[recognizedText || "Waiting for Input..."]} typeSpeed={70} backSpeed={50} />
+                <ReactTyped strings={[
+                         Array.isArray(recognizedText)
+                             ? recognizedText.join("")
+                             : recognizedText?.toString() || "Waiting for Input..."]} typeSpeed={70} backSpeed={50} />
                 <p className="bg-neutral-500 text-white rounded-full p-2">Status: {isCapturing ? "Capturing..." : "Paused"}</p>
             </div>
             {recognizedText && <TextToSpeech text={recognizedText} />}
