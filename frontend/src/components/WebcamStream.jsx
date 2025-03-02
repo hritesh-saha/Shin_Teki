@@ -122,7 +122,7 @@
 //         </div>
 //     );
 // }
-
+import { FaHistory } from "react-icons/fa";
 import { useEffect, useRef, useState, useCallback } from "react";
 import Webcam from "react-webcam";
 import { io } from "socket.io-client";
@@ -201,15 +201,23 @@ export default function SignLanguageRecognition() {
 
     return (
         <div className="bg-neutral-800 min-h-screen flex flex-col justify-center items-center space-y-6">
+            
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 2 }}
                 className="leading-tight flex justify-center items-center w-screen border-b-4 border-[#FF007F] mb-6 text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-[#FF007F] md:text-5xl sm:text-4xl text-xl font-bold mt-2">
                 <div className="mx-4">Shin Teki</div>
-                <div><img className="h-[40px] w-[40px]" src="/ShinTeki.jpeg" alt="Shin Teki" /></div>
+                <div><img className="h-[40px] w-[40px]" src="/ShinTeki.jpeg" alt="Shin Teki" /></div>       
             </motion.div>
-            <button onClick={() => navigate("/chain")}
-                className="px-4 py-2 bg-[#FF007F] text-white font-bold rounded-md shadow-md hover:bg-[#e60073] transition">
-                Go to Shin Page
-            </button>
+            <div className="flex justify-end w-full px-6">
+    <button 
+        onClick={() => navigate("/chain")}
+        className="flex flex-row px-4 py-2 w-fit bg-[#FF007F] text-white font-bold rounded-md shadow-md hover:bg-[#e60073] transition"
+    >
+        <FaHistory className="mt-1 mr-1"></FaHistory>History
+        
+    </button>
+</div>
+           
+            
             <motion.div whileInView={{ opacity: 1, x: 0 }} initial={{ opacity: 0, x: -100 }} transition={{ duration: 1 }}
                 className="bg-gray-500 border-4 border-[#FF007F] w-[80vw] max-w-[800px] h-[60vh] max-h-[600px] flex justify-center items-center">
                 <WebcamVideo isCapturing={isCapturing} setIsCapturing={setIsCapturing} />

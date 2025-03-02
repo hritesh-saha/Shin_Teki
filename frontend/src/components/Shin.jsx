@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Web3 from "web3";
 import Shin from "../contracts/Shin.json";
+import { useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
+
 
 function ShinC() {
     const [state, setState] = useState({ web3: null, contract: null });
     const [allData, setAllData] = useState([]);
+    const navigate=useNavigate();
 
     useEffect(() => {
         const provider = new Web3.providers.HttpProvider("http://127.0.0.1:7545");
@@ -48,8 +52,17 @@ function ShinC() {
     }
 
     return (
-        <div className="bg-neutral-800 min-h-screen flex flex-col justify-center items-center space-y-6">
-        <div className="p-6 max-w-2xl mx-auto bg-neutral-600 rounded-xl shadow-md space-y-4">
+        <div className="bg-neutral-800 min-h-screen flex flex-col justify-center items-center space-y-6 ">
+            <div className="absolute top-4 left-6">
+        <button 
+            onClick={() => navigate("/stream")}
+            className="px-4 py-2 bg-[#FF007F] text-white font-bold rounded-md shadow-md hover:bg-[#e60073] transition"
+        >
+            <FaArrowLeft />
+        </button>
+    </div>
+
+        <div className=" flex flex-col items-center p-6 max-w-2xl mx-auto bg-neutral-600 rounded-xl shadow-md space-y-4 hover:border-[#FF007F]">
             <h2 className="text-xl text-white font-bold">Speech Data Interaction</h2>
             <div>
                 <h3 className="text-lg font-semi text-white bold mt-4">All Stored Data:</h3>
