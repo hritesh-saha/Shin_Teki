@@ -22,7 +22,7 @@ Sign Language Detection is an AI-powered system that recognizes and translates s
 
 ## Installation
 ### Prerequisites
-- Node.js & npm
+- pip & npm
 - Python (for ML model) -version(3.10.*)
 - Virtual environment setup (optional but recommended)
 - Ganache
