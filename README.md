@@ -62,6 +62,23 @@ python server.py
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 truffle migrate --reset
 ```
+## Blockchain Migration Notes
+
+### Copying `shin.json` After Migration
+
+1. **After every migration**, a new `shin.json` file is generated in the backend.  
+2. Copy the contents of the newly generated `shin.json`.  
+3. Paste the copied content into the `shin.json` file in the frontend.  
+4. Ensure the frontend `shin.json` always has the latest contract details.
+
+### Keeping Ganache Open
+
+- **Ganache must remain open** in the background while working with blockchain.  
+- Closing Ganache may result in losing contract deployments and requiring re-migration.  
+- If Ganache is restarted, re-run migrations and update the frontend `shin.json`.
+
+Always follow these steps to ensure seamless blockchain interactions! 🚀
+
 
 ## Usage
 - Run the application and upload a video or use a webcam to capture signs.
