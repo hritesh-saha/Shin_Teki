@@ -66,7 +66,7 @@ truffle migrate --reset
 
 ### Copying `shin.json` After Migration
 
-1. **After every migration**, a new `shin.json` file is generated in the backend.  
+1. **After every migration**, a new `shin.json` file is generated in the blockchain folder.  
 2. Copy the contents of the newly generated `shin.json`.  
 3. Paste the copied content into the `shin.json` file in the frontend.  
 4. Ensure the frontend `shin.json` always has the latest contract details.
