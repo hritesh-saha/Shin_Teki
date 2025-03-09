@@ -1,7 +1,7 @@
 ![github](https://img.shields.io/badge/GitHub-000000.svg?style=for-the-badge&logo=GitHub&logoColor=white)
 ![markdown](https://img.shields.io/badge/Markdown-000000.svg?style=for-the-badge&logo=Markdown&logoColor=white)
 
-# Sign Language Detection
+# Gestura
 
 ## Overview
 Sign Language Detection is an AI-powered system that recognizes and translates sign language gestures into text or speech. This project aims to bridge the communication gap between sign language users and non-sign language speakers using computer vision and deep learning.
